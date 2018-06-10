@@ -4,30 +4,6 @@ width = 110;
 deph = 90;
 hight = 35;
 
-module Box() {
-    translate([0,0,hight/2]) {
-        difference(){
-            cube([width,deph,hight],true);
-            translate([0,-strength,-strength]){
-                cube([width-(2*strength),deph+1,hight],true);
-            }
-            cube([width+10,deph-10,hight-10],true);
-            cube([width-10,deph+10,hight-10],true);
-            Holes(width,deph);
-        }
-    }
-    translate([0,deph/2,hight-strength*1.5]){
-      union(){
-        cube([width-strength*2,8,strength],true);
-        for(w = [-1 : 1 : 1])
-          translate([(w*width/2)-(w*strength*2),2,strength/2]){
-            cylinder (h = strength, r=1, center = true);
-          }
-      }
-    }
-}
-
-
 module bar_v(x,y,l){
     color("red"){
       cube([x,y,l],false);
@@ -42,7 +18,7 @@ module bar_h(x,y,l){
 
 module bar_t(x,y,l){
     color("yellow"){
-      cube([l,x,y],fale);
+      cube([l,x,y],false);
     }      
 }
 
@@ -89,13 +65,6 @@ module Holes(w, d){
                cylinder (h = hight+10, r=diameter/2, center = true);
             }   
  }
-}
-
-module CaddyBox1(){
-    union() {
-        Box();
-        Bed();    
-    }
 }
 
 module CaddyBox2(){
@@ -165,14 +134,9 @@ module Caddy(){
 }
 
 union(){
-    color("blue"){
-     Caddy();
-    }
-    
-    // translate([width/2,deph/2+5,thinkness]){
-    //    CaddyBox1();
-    
-    // }    
+    // color("blue"){
+    //  Caddy();
+    // }
 
     translate([1,5,0]){
       CaddyBox2();
