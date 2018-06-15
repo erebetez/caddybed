@@ -1,8 +1,8 @@
 
 // bed
-width = 112;
-deph = 90;
-hight = 35;
+width = 110;
+deph = 85;
+hight = 38;
 
 module bar_v(x,y,l){
     color("red"){
@@ -83,19 +83,32 @@ module Holes(w, d){
 }
 
 module BedExtension(){
+  deph = 95;
+  w = width / 2;
   color("orange"){
+    BedWing();
+  }
+  color("navy"){
+    translate([w,0,0]){
+        BedWing();
+    }
+  }
+}
+
+module BedWing(){
+    deph = 95;
+    w = width / 2;
     bar_size = 4.1;
-    Bed(width,deph);
+    Bed(w,deph);
     translate([0,0,-bar_size]) {
         bar_h(bar_size,bar_size,deph-bar_size);
     }
-    translate([width-bar_size,0,-bar_size]) {
+    translate([w-bar_size,0,-bar_size]) {
         bar_h(bar_size,bar_size,deph-bar_size);
     }
     translate([0,deph-bar_size,-bar_size]) {
-        bar_t(bar_size,bar_size,width);
+        bar_t(bar_size,bar_size,w);
     }
-  }
 }
 
 module CaddyBox2(){
@@ -107,7 +120,7 @@ module CaddyBox2(){
     translate([0,0,0]){
       BoxSide(x,y,hight);
     }
-
+ // use mirror()
     translate([width-x,0,0]){
       BoxSide(x,y,hight);
     }
@@ -154,7 +167,7 @@ module Caddy(){
         difference(){
           cube([thinkness,c_deph,c_hight],false);
           translate([-1,100,thinkness]){
-             cube([thinkness+2,80,90],false);
+             cube([thinkness+2,80,110],false);
           }
           
         }
@@ -162,20 +175,20 @@ module Caddy(){
 
     translate([0,0,-thinkness]){
         Base();
-        // translate([-thinkness,0,0]){
-        //     Side();
-        // }
-        translate([c_width,0,0]){
+        translate([-thinkness,0,0]){
             Side();
+        }
+        translate([c_width,0,0]){
+            // Side();
         }        
     }
         
 }
 
 union(){
-    // color("blue"){
+    color("blue"){
     //  Caddy();
-    // }
+    }
 
     translate([1,5,0]){
       CaddyBox2();
