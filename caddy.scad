@@ -24,15 +24,16 @@ module bar_t(x,y,l){
 
 module BoxSide(x,y,h){
    // TODO check lenght of box should probably not be greater than 90
+    bar_size = 4.1;
     bar_v(x,y,h-y);
     translate([0,0,h-y]){
         difference(){
           bar_h(x,y,deph+y/2);
-          translate([-1,-0.1,y-3]) {
-            bar_t(3.1,3.1,deph+2);
+          translate([-1,-0.1,y-bar_size]) {
+            bar_t(bar_size+0.1,bar_size,deph+2);
           }
-          translate([-1,deph,y-3]) {
-            bar_t(y,x,deph+2);
+          translate([-1,deph,y-bar_size]) {
+            bar_t(y,y,deph+2);
           }
         }
     }
@@ -44,13 +45,19 @@ module BoxSide(x,y,h){
 module BoxTop(w,d,h){   
     x = 8;
     y = 4;
+    bar_size = 4.1;
     color("green"){
-        Bed(w,d);
-        translate([0,0,-3]){
-          bar_t(3,3,w);
+        Bed(w,d/2);
+        translate([0,0,-bar_size]){
+          bar_t(bar_size,bar_size,w);
         }
         translate([y,d-x/2,-y]){
             bar_t(x,y,w-2*y);
+        }
+    }
+    color("olive"){
+        translate([0,d/2,0]) {
+             Bed(w,d/2);
         }
     }
 }
@@ -59,7 +66,7 @@ module Bed(x,y){
     strength = 1.2;
     difference(){
         cube([x,y,strength],false);
-        Holes(x,y);
+        // Holes(x,y);
     }
 }
 
@@ -77,7 +84,7 @@ module Holes(w, d){
 
 module BedExtension(){
   color("orange"){
-    bar_size = 3;
+    bar_size = 4.1;
     Bed(width,deph);
     translate([0,0,-bar_size]) {
         bar_h(bar_size,bar_size,deph-bar_size);
