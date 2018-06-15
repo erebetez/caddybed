@@ -22,33 +22,43 @@ module bar_t(x,y,l){
     }      
 }
 
-module BoxSide(pos,x,y,h){
-   translate([pos,0,0]){
-        bar_v(x,y,h);
-        translate([0,y,h-y]){
-            bar_h(x,y,deph-y-8/2);
+module BoxSide(x,y,h){
+   // TODO check lenght of box should probably not be greater than 90
+    bar_v(x,y,h-y);
+    translate([0,0,h-y]){
+        difference(){
+          bar_h(x,y,deph+y/2);
+          translate([-1,-0.1,y-3]) {
+            bar_t(3.1,3.1,deph+2);
+          }
+          translate([-1,deph,y-3]) {
+            bar_t(y,x,deph+2);
+          }
         }
-        translate([0,deph-y,0]) {       
-            bar_v(x,y,h-8); 
-        }
-   }
+    }
+    translate([0,deph-y/2,0]) {
+        bar_v(x,y,h-y);
+    }
 }
 
 module BoxTop(w,d,h){   
-    bar = 8;
+    x = 8;
+    y = 4;
     color("green"){
         translate([0,0,hight]){
         Bed(w,d);
-        translate([0,d-bar/2,-bar]){
-            bar_t(bar,bar,w);
+        translate([0,0,-3]){
+          bar_t(3,3,w);
         }
-        
+        translate([y,d-x/2,-y]){
+            bar_t(x,y,w-2*y);
         }
+      }
     }
 }
 
 module Bed(x,y){
-    strength = 2.2;
+    strength = 1.2;
     difference(){
         cube([x,y,strength],false);
         Holes(x,y);
@@ -67,18 +77,38 @@ module Holes(w, d){
  }
 }
 
+module BedExtension(){
+  color("orange"){
+    bar_size = 3;
+    Bed(width,deph);
+    translate([0,0,-bar_size]) {
+        bar_h(bar_size,bar_size,deph-bar_size);
+    }
+    translate([width-bar_size,0,-bar_size]) {
+        bar_h(bar_size,bar_size,deph-bar_size);
+    }
+    translate([0,deph-bar_size,-bar_size]) {
+        bar_t(bar_size,bar_size,width);
+    }
+  }
+}
+
 module CaddyBox2(){
-    x = 5.5;
-    y = 7.5; 
+    x = 4;
+    y = 8;
     width = 110;
-    deph = 90;
+    // deph = 90;
     hight = 35;
-    BoxSide(0,x,y,hight);
-    BoxSide(width-x,x,y,hight);
+    translate([0,0,0]){
+      BoxSide(x,y,hight);
+    }
+    translate([width-x,0,0]){
+      BoxSide(x,y,hight);
+    }
     BoxTop(width,deph,hight);
 
     translate([0,deph,hight]){
-         Bed(width,deph);
+         BedExtension(x);
     }
 }
 
@@ -123,9 +153,9 @@ module Caddy(){
 
     translate([0,0,-thinkness]){
         Base();
-        translate([-thinkness,0,0]){
-            Side();
-        }
+        // translate([-thinkness,0,0]){
+        //     Side();
+        // }
         translate([c_width,0,0]){
             Side();
         }        
