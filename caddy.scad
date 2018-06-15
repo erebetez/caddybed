@@ -1,6 +1,6 @@
 
 // bed
-width = 110;
+width = 112;
 deph = 90;
 hight = 35;
 
@@ -45,7 +45,6 @@ module BoxTop(w,d,h){
     x = 8;
     y = 4;
     color("green"){
-        translate([0,0,hight]){
         Bed(w,d);
         translate([0,0,-3]){
           bar_t(3,3,w);
@@ -53,7 +52,6 @@ module BoxTop(w,d,h){
         translate([y,d-x/2,-y]){
             bar_t(x,y,w-2*y);
         }
-      }
     }
 }
 
@@ -96,18 +94,22 @@ module BedExtension(){
 module CaddyBox2(){
     x = 4;
     y = 8;
-    width = 110;
-    // deph = 90;
-    hight = 35;
+
+    explode = 20;
+
     translate([0,0,0]){
       BoxSide(x,y,hight);
     }
+
     translate([width-x,0,0]){
       BoxSide(x,y,hight);
     }
-    BoxTop(width,deph,hight);
 
-    translate([0,deph,hight]){
+    translate([0,0,hight+explode]){
+      BoxTop(width,deph,hight);
+    }
+
+    translate([0,deph+explode,hight+explode]){
          BedExtension(x);
     }
 }
