@@ -86,12 +86,12 @@ module FixHole(orientation){
     radius = 1.25;
 
     rotate(orientation,[1,0,0]) {
-        translate([-0.1,-radius,0]){
-            cube([20,radius*2,radius],false);
+        translate([-radius,-radius,0]){
+            cube([10,radius*2,radius],false);
         }
 
         rotate(90, [0,1,0]) {
-            cylinder (h = 20, r=radius, center = true, $fn=100);
+            cylinder (h = 10, r=radius, center = true, $fn=50);
         }
     }
 }
@@ -106,7 +106,7 @@ module BoxTop(w,d,h){
           bar_t(bar_size,bar_size,w);
         }
         translate([y,d-x/2,-y]){
-            bar_t(x,y,w-2*y);
+          bar_t(x,y,w-2*y);
         }
     }
     color("olive"){
@@ -120,18 +120,18 @@ module Bed(x,y){
     strength = 1.2;
     difference(){
         cube([x,y,strength],false);
-        // Holes(x,y);
+        Holes(x,y);
     }
 }
 
-module Holes(w, d){
+module Holes(wi, di){
  diameter = 2.5;
- distance = diameter * 4;
+ distance = diameter * 6;
  translate([distance/2,distance/2,0]) {
-     for(w = [-w/2 : w / distance : w])
-        for(d = [-d/2 : d / distance : d])
+     for(w = [-wi/2 : distance : wi-distance])
+        for(d = [-di/2 : distance : di-distance])
             translate([w,d,0]){
-               cylinder (h = hight+10, r=diameter/2, center = true);
+               cylinder (h = 5, r=diameter/2, center = true, $fn=50);
             }
  }
 }
