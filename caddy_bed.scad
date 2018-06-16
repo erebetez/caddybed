@@ -7,10 +7,10 @@ hight = 38;
 
 
 union(){
-    Caddy("navy");
+    // Caddy("navy");
 
     translate([1,5,0]){
-      CaddyBox2();
+      CaddyBox();
     }
 }
 
@@ -33,22 +33,66 @@ module bar_t(x,y,l){
 }
 
 module BoxSide(x,y,h){
-   // TODO check lenght of box should probably not be greater than 90
-    bar_size = 4.1;
-    bar_v(x,y,h-y);
+    leg_offset = 10;
+
+    // Front
+    translate([0,leg_offset,0]){
+        BoxSideLeg(x,y,h);
+    }
+
     translate([0,0,h-y]){
-        difference(){
-          bar_h(x,y,deph+y/2);
-          translate([-1,-0.1,y-bar_size]) {
-            bar_t(bar_size+0.1,bar_size,deph+2);
-          }
-          translate([-1,deph,y-bar_size]) {
-            bar_t(y,y,deph+2);
-          }
+        BoxSideTop(x,y,h,leg_offset);
+    }
+
+    // Back
+    translate([0,deph-y,0]) {
+        BoxSideLeg(x,y,h);
+    }
+}
+
+module BoxSideTop(x,y,h,leg_offset){
+    bar_size = 4.1;
+    difference(){
+        bar_h(x,y,deph+y/2);
+
+        translate([-0.1,-0.1,y-bar_size]) {
+          bar_t(bar_size+0.1,bar_size+0.1,deph+2);
+        }
+        translate([-0.1,deph,y-bar_size]) {
+          bar_t(y,y,deph+2);
+        }
+
+        // Front
+        translate([0,leg_offset+y/2,x]) {
+          FixHole(180);
+        }
+        // Back
+        translate([0,deph-y/2,x]) {
+          FixHole(180);
         }
     }
-    translate([0,deph-y/2,0]) {
+}
+
+module BoxSideLeg(x,y,h) {
+    difference(){
         bar_v(x,y,h-y);
+        translate([0,y/2,h-y-x]) {
+            FixHole(0);
+        }
+    }
+}
+
+module FixHole(orientation){
+    radius = 1.25;
+
+    rotate(orientation,[1,0,0]) {
+        translate([-0.1,-radius,0]){
+            cube([20,radius*2,radius],false);
+        }
+
+        rotate(90, [0,1,0]) {
+            cylinder (h = 20, r=radius, center = true, $fn=100);
+        }
     }
 }
 
@@ -98,7 +142,7 @@ module BedExtension(){
   color("orange"){
     BedWing();
   }
-  color("navy"){
+  color("OrangeRed"){
     translate([w,0,0]){
         BedWing();
     }
@@ -121,18 +165,20 @@ module BedWing(){
     }
 }
 
-module CaddyBox2(){
+module CaddyBox(){
     x = 4;
     y = 8;
 
-    explode = 20;
+    explode = 0;
 
     translate([0,0,0]){
       BoxSide(x,y,hight);
     }
- // use mirror()
-    translate([width-x,0,0]){
-      BoxSide(x,y,hight);
+
+    translate([width,0,0]){
+      mirror(){
+         BoxSide(x,y,hight);
+      }
     }
 
     translate([0,0,hight+explode]){
@@ -140,7 +186,7 @@ module CaddyBox2(){
     }
 
     translate([0,deph+explode,hight+explode]){
-         BedExtension(x);
+      BedExtension();
     }
 }
 
